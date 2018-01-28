@@ -21,7 +21,10 @@ namespace CpuMerge
             InitializeComponent();
             graphics = CreateGraphics();
         }
-        
+        protected override void OnResize(EventArgs e)
+        {
+            graphics.DrawImage(target, 0, 0);
+        }
         public override void Refresh()
         {
             graphics.DrawImage(target, 0, 0);

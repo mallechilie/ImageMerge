@@ -16,18 +16,23 @@ namespace CpuMerge
         [STAThread]
         static void Main()
         {
+            //Form1 g = new Form1();
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
             Form1 f = new Form1();
-            new Thread(() => RunForm(f)).Start();
+            f.Show();
+            //new Thread(() => RunForm(f)).Start();
+            //RunForm(f);
             RainImage firstImage = ParseLine(Console.ReadLine());
             RainImage secondImage = ParseLine(Console.ReadLine());
             RainImage target = ParseLine(Console.ReadLine());
             ImageMerger merger = new ImageMerger(firstImage, secondImage, target, ImageMerger.CombineMode.Mean);
-            f.target = (Bitmap)merger.target;
+            f.target = (Bitmap) merger.target;
+            f.target.Save(Console.ReadLine());
+            RunForm(f);
         }
         static void RunForm(Form1 f)
         {
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(f);
         }
         static RainImage ParseLine(string s)

@@ -99,8 +99,8 @@ namespace CpuMerge
         }
         private bool OutOfBounds(Int2 location)
         {
-            return location.x < Position.x || location.y < Position.y || location.x > Position.x + Size.x ||
-                   location.y > Position.y + Size.y;
+            return location.x < Position.x || location.y < Position.y || location.x >= Position.x + Size.x ||
+                   location.y >= Position.y + Size.y;
         }
 
         public static explicit operator Bitmap(RainImage v)
