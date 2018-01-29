@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 
-public static class ISynchronizeInvokeExtensions
+public static class SynchronizeInvokeExtensions
 {
     public static void InvokeEx<T>(this T @this, Action<T> action) where T : ISynchronizeInvoke
     {

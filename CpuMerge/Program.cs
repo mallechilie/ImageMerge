@@ -26,9 +26,9 @@ namespace CpuMerge
             RainImage firstImage = ParseLine(Console.ReadLine());
             RainImage secondImage = ParseLine(Console.ReadLine());
             RainImage target = ParseLine(Console.ReadLine());
-            ImageMerger merger = new ImageMerger(firstImage, secondImage, target, ImageMerger.CombineMode.Mean);
-            f.target = (Bitmap) merger.target;
-            f.target.Save(Console.ReadLine());
+            ImageMerger merger = new ImageMerger(firstImage, secondImage, target, ImageMerger.CombineMode.Mask);
+            f.Target = (Bitmap) merger.Target;
+            f.Target.Save(Console.ReadLine());
             RunForm(f);
         }
         static void RunForm(Form1 f)
@@ -37,7 +37,7 @@ namespace CpuMerge
         }
         static RainImage ParseLine(string s)
         {
-            string[] strings = s.Split();
+            string[] strings = s.Split(new[] { ' ' }, 5);
             if (strings.Length >= 5)
                 return new RainImage(new Int2(int.Parse(strings[0]), int.Parse(strings[1])),
                     new Int2(int.Parse(strings[2]), int.Parse(strings[3])), strings[4]);

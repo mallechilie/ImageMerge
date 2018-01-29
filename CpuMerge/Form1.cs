@@ -12,8 +12,8 @@ namespace CpuMerge
 {
     public partial class Form1 : Form
     {   
-        public Bitmap target;
-        private Graphics graphics;
+        public Bitmap Target;
+        private readonly Graphics graphics;
 
 
         public Form1()
@@ -23,11 +23,11 @@ namespace CpuMerge
         }
         protected override void OnResize(EventArgs e)
         {
-            graphics.DrawImage(target, 0, 0);
+            graphics.DrawImage(Target, 0, 0);
         }
         public override void Refresh()
         {
-            graphics.DrawImage(target, 0, 0);
+            graphics.DrawImage(Target, 0, 0);
         }
     }
 }
