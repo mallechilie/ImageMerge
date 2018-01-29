@@ -1,14 +1,34 @@
 ﻿using System;
 using System.Drawing;
+using System.Runtime.CompilerServices;
 
 namespace CpuMerge
 {
     public struct RainImage
     {
-        public readonly Color[,] Pixels;
+        private readonly Color[,] Pixels;
         public readonly Int2 Position;
         public readonly Int2 Size;
         public readonly PreserveAspectRatio AspectRatio;
+        public int Width => Pixels.GetLength(0);
+        public int Height => Pixels.GetLength(1);
+        public Color this[int x, int y]
+        {
+            get
+            {
+                if (x < 0 || x >= Width || y < 0 || y >= Height)
+                    return Color.Empty;
+                return Pixels[x, y];
+            }
+            set
+            {
+
+                if (x < 0 || x >= Width || y < 0 || y >= Height)
+                    return;
+                Pixels[x, y] = value;
+
+            }
+        }
         public enum PreserveAspectRatio
         {
             Exact = 0,
@@ -54,7 +74,7 @@ namespace CpuMerge
             Pixels = new Color[image.Width, image.Height];
             for (int y = 0; y < Pixels.GetLength(1); y++)
             for (int x = 0; x < Pixels.GetLength(0); x++)
-                Pixels[x, y] = image.GetPixel(x, y);
+                    Pixels[x, y] = image.GetPixel(x, y);
             Position = default(Int2);
             Size = new Int2(Pixels.GetLength(0), Pixels.GetLength(1));
         }
@@ -65,7 +85,7 @@ namespace CpuMerge
             if (OutOfBounds(location))
                 return Color.Empty;
             Float2 relative = new Float2((float)(location.X - Position.X) / Size.X, (float)(location.Y - Position.Y) / Size.Y);
-            Float2 scaled = new Float2(relative.X * Pixels.GetLength(0), relative.Y * Pixels.GetLength(1));
+            Float2 scaled = new Float2(relative.X * Width, relative.Y * Height);
             if (!antialiasing)
                 return Pixels[(int)Math.Round(scaled.X), (int)Math.Round(scaled.Y)];
             Int2 inArray = new Int2((int)scaled.X, (int)scaled.Y);
@@ -85,10 +105,10 @@ namespace CpuMerge
 
         public static explicit operator Bitmap(RainImage v)
         {
-            Bitmap map = new Bitmap(v.Pixels.GetLength(0), v.Pixels.GetLength(1));
+            Bitmap map = new Bitmap(v.Width, v.Height);
             for (int y = 0; y < map.Height; y++)
             for (int x = 0; x < map.Width; x++)
-                map.SetPixel(x, y, v.Pixels[x, y]);
+                map.SetPixel(x, y, v[x, y]);
             return map;
         }
     }

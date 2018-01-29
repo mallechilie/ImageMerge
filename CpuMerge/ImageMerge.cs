@@ -9,7 +9,7 @@ namespace CpuMerge
         private readonly CombineMode mode;
         private readonly Color[,] first;
         private readonly Color[,] second;
-        public readonly RainImage Target;
+        public  RainImage Target;
         private Sampler sampler;
 
         public ImageMerger(RainImage first, RainImage second, RainImage target, CombineMode mode = CombineMode.Mask)
@@ -34,7 +34,7 @@ namespace CpuMerge
         {
             Color firstColor = first[position.X, position.Y];
             Color secondColor = second[position.X, position.Y];
-            Target.Pixels[position.X , position.Y] = Combine(firstColor, secondColor);
+            Target[position.X , position.Y] = Combine(firstColor, secondColor);
         }
         private Color Combine(Color firstColor, Color secondColor)
         {
