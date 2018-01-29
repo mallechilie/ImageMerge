@@ -26,8 +26,8 @@ namespace CpuMerge
 
         private void Merge()
         {
-            for (int y = Target.Position.Y; y < Target.Size.Y + Target.Position.Y; y++)
-                for (int x = Target.Position.X; x < Target.Size.X + Target.Position.X; x++)
+            for (int y = 0; y < Target.Size.Y; y++)
+                for (int x = 0; x < Target.Size.X; x++)
                     MergePixel(new Int2(x, y));
         }
         private void MergePixel(Int2 position)
