@@ -1,0 +1,6 @@
+﻿asynchoon plaatjes berekenen
+op GPU plaatjes berekenen
+
+Let target depend on Image:
+ - TargetDimensions = ImageDimensions
+ - TargetDimensions = AspectRatio(ImageDimensions)

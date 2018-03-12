@@ -7,7 +7,7 @@ namespace CpuMerge
     static class Program
     {
         private static OpenFileDialog openFileDialog1;
-        private static bool Easier = true;
+        private static bool easier = true;
         
         [STAThread]
         static void Main()
@@ -20,7 +20,7 @@ namespace CpuMerge
             RainImage firstImage;
             RainImage secondImage;
             RainImage target;
-            if (Easier)
+            if (easier)
             {
                 firstImage = new RainImage(new Int2(30, 30), new Int2(940, 940), OpenFileDialog(), RainImage.PreserveAspectRatio.Preserve);
                 secondImage = new RainImage(new Int2(0, 0), new Int2(1000, 1000), @"C:\Users\Reus\Documents\Rainmeter\Skins\Custom Slideshow Frame\@Resources\circle.png", RainImage.PreserveAspectRatio.Fill);
@@ -37,13 +37,9 @@ namespace CpuMerge
             string filename = SaveFileDialog();
             if (filename != null)
                 f.Target.Save(filename);
-            RunForm(f);
-        }
-
-        static void RunForm(Form1 f)
-        {
             Application.Run(f);
         }
+        
         static string OpenFileDialog()
         {
             if (openFileDialog1 == null)
