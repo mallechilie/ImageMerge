@@ -7,7 +7,7 @@ namespace PluginParentChild
         // This list of all parent measures is used by the child measures to find their parent.
         internal static readonly List<ParentMeasure> ParentMeasures = new List<ParentMeasure>();
 
-        internal List<ChildMeasure> Cildren;
+        internal List<ChildMeasure> Children;
 
 
         internal ParentMeasure()

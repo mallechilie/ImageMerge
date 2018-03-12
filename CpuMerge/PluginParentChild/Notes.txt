@@ -1,0 +1,20 @@
+﻿https://docs.rainmeter.net/developers/plugin/csharp/
+
+Initialize(ref IntPtr data, IntPtr rm)
+- Called when a measure is created
+
+Reload(IntPtr data, IntPtr rm, ref double maxValue): 
+- If DynamicVariables=1 is set on the measure, this is called just before every call to the Update function during the update cycle. (Otherwise, only just between Initialize and Update.)
+
+Finalize(IntPtr data): 
+- Called by Rainmeter when a measure is about to be destroyed. Perform cleanup here.
+
+IntPtr GetString(IntPtr data)
+- Usable to get MeasurePath:
+[DllExport]
+public static IntPtr GetString(IntPtr data)
+{
+	// Return a string value (must be marshalled)
+	return Marshal.StringToHGlobalUni("SomeValue");
+}
+- Will be used as measure value
