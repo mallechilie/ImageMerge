@@ -17,6 +17,7 @@
 */
 
 using System;
+using System.Runtime.InteropServices;
 using Rainmeter;
 
 // Overview: This example demonstrates a basic implementation of a parent/child
@@ -72,43 +73,54 @@ namespace PluginParentChild
 {
     internal class Measure
     {
-        internal string Name;
-        internal bool DynamicVariables;
+        internal readonly string Name;
+        internal readonly bool DynamicVariables;
         internal IntPtr Skin;
+        protected API Api;
 
-        internal virtual void Dispose()
-        {
-        }
 
-        internal virtual void Reload(API api)
+        internal Measure(API api)
         {
+            this.Api = api;
             Name = api.GetMeasureName();
             Skin = api.GetSkin();
             DynamicVariables = api.ReadInt("DynamicVariables", 0) == 1;
-            //string type = api.ReadString("Type", "");
-            //switch (type.ToLowerInvariant())
-            //{
-            //    case "a":
-            //        Type = MeasureType.A;
-            //        break;
-
-            //    case "b":
-            //        Type = MeasureType.B;
-            //        break;
-
-            //    case "c":
-            //        Type = MeasureType.C;
-            //        break;
-
-            //    default:
-            //        api.Log(API.LogType.Error, $"ParentChild.dll: Type={type} not valid");
-            //        break;
-            //}
+        }
+        internal static Measure MeasureFromData(API api, IntPtr data)
+        {
+            switch (api.ReadString("Type", ""))
+            {
+                case "ImageMaskMeasure":
+                    return (ImageMaskMeasure)GCHandle.FromIntPtr(data).Target;
+                case "ImageMeasure":
+                    return (ImageMeasure)GCHandle.FromIntPtr(data).Target;
+                case "ImageResultMeasure":
+                    return (ImageBaseMeasure)GCHandle.FromIntPtr(data).Target;
+                default:
+                    return (Measure)GCHandle.FromIntPtr(data).Target;
+            }
         }
 
-        internal virtual double Update(API api)
+        /// <summary>
+        /// Called after creation and before each Update if dynamicvariables = 1.
+        /// </summary>
+        /// <param name="api">Insert the api to make sure updated information is loaded.</param>
+        internal void Reload(API api)
+        {
+            this.Api = api;
+            Reload();
+        }
+        protected virtual void Reload()
+        {
+        }
+
+        internal virtual double Update()
         {
             return 0.0;
+        }
+
+        internal virtual void Dispose()
+        {
         }
     }
 }

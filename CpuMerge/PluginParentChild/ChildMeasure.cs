@@ -5,18 +5,12 @@ namespace PluginParentChild
 {
     internal class ChildMeasure : Measure
     {
-        protected ParentMeasure ParentMeasure
-        {
-            get;
-            set;
-        }
+        protected readonly ParentMeasure ParentMeasure;
 
-        internal override void Reload(API api)
+        internal ChildMeasure(API api) : base(api)
         {
-            base.Reload(api);
-
-            string parentName = api.ReadString("ParentName", "");
-            IntPtr skin = api.GetSkin();
+            string parentName = Api.ReadString("Parent", "");
+            IntPtr skin = Api.GetSkin();
 
             // Find parent using name AND the skin handle to be sure that it's the right one.
             ParentMeasure = null;
@@ -24,21 +18,22 @@ namespace PluginParentChild
             {
                 if (parentMeasure.Skin.Equals(skin) && parentMeasure.Name.Equals(parentName))
                 {
-                    if (this.ParentMeasure != null)
-                        api.Log(API.LogType.Warning, $"ParentChild.dll: parentName={parentName} has multiple instances running");
-                    this.ParentMeasure = parentMeasure;
+                    if (ParentMeasure != null)
+                        Api.Log(API.LogType.Warning, $"ParentChild.dll: Parent={parentName} has multiple instances running");
+                    ParentMeasure = parentMeasure;
                 }
             }
 
             if (ParentMeasure == null)
             {
-                api.Log(API.LogType.Error, $"ParentChild.dll: ParentName={parentName} not valid");
+                Api.Log(API.LogType.Error, $"ParentChild.dll: Parent={parentName} not valid");
             }
         }
-        internal override double Update(API api)
+        
+        internal override double Update()
         {
-            double d = base.Update(api);
-            ParentMeasure.Update(api);
+            double d = base.Update();
+            ParentMeasure.Update();
             return d;
         }
     }

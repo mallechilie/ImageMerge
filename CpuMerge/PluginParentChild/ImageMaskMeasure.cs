@@ -7,12 +7,13 @@ namespace PluginParentChild
 {
     internal class ImageMaskMeasure : ParentMeasure
     {
+        //TODO: assign image, mask, result.
         private ImageMeasure image;
         private string imagePath;
         private ImageMeasure mask;
         private string maskPath;
-        private ImageResultMeasure result;
-        public ImageResultMeasure Result
+        private ImageBaseMeasure result;
+        public ImageBaseMeasure Result
         {
             get
             {
@@ -27,9 +28,16 @@ namespace PluginParentChild
             set => result = value;
         }
 
-        internal override void Reload(API api)
+
+        internal ImageMaskMeasure(API api) : base(api)
         {
-            base.Reload(api);
+
+        }
+
+
+        protected override void Reload()
+        {
+            base.Reload();
             Merge();
         }
 
@@ -43,11 +51,11 @@ namespace PluginParentChild
             ((Bitmap)merger.Target).Save(result.Path);
         }
 
-        internal override double Update(API api)
+        internal override double Update()
         {
             // Check if anything changed within image or mask.
             result = Result;
-            return base.Update(api);
+            return base.Update();
         }
 
         private static RainImage.PreserveAspectRatio ConvertAspectRatio(ImageMeasure.PreserveAspectRatio ratio)

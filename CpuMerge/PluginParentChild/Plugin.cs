@@ -7,49 +7,82 @@ namespace PluginParentChild
     public static class Plugin
     {
         private static API api;
+
         [DllExport]
         public static void Initialize(ref IntPtr data, IntPtr rm)
         {
             api = new API(rm);
-
-            string parent = api.ReadString("ParentName", "");
+            
             Measure measure;
-            if (String.IsNullOrEmpty(parent))
+            switch (api.ReadString("Type", ""))
             {
-                measure = new ParentMeasure();
+                case "ImageMaskMeasure":
+                {
+                    measure = new ImageMaskMeasure(api);
+                    break;
+                }
+                case "ImageMeasure":
+                {
+                    measure = new ImageMeasure(api);
+                    break;
+                }
+                case "ImageResultMeasure":
+                {
+                    measure = new ImageBaseMeasure(api);
+                    break;
+                }
+                default:
+                {
+                    measure = new Measure(api);
+                    break;
+                }
             }
-            else
-            {
-                measure = new ChildMeasure();
-            }
-
             data = GCHandle.ToIntPtr(GCHandle.Alloc(measure));
         }
 
         [DllExport]
         public static void Finalize(IntPtr data)
         {
-            Measure measure = (Measure)GCHandle.FromIntPtr(data).Target;
-            measure.Dispose();
             GCHandle.FromIntPtr(data).Free();
         }
 
         [DllExport]
         public static void Reload(IntPtr data, IntPtr rm, ref double maxValue)
         {
-            Measure measure = (Measure)GCHandle.FromIntPtr(data).Target;
-            if(rm!=api.m_Rm)
-                api.Log(API.LogType.Warning, $"IntPtr values of previous api ({api.m_Rm}) and this api ({rm}) are different. Will keep using the old one.");
-            // TODO: check if the static API works.
-            measure.Reload(api);
-            //measure.Reload(new API(rm));
+            api = new API(rm);
+            Measure measure = Measure.MeasureFromData(rm, data);
+            measure.Reload(rm);
         }
 
         [DllExport]
         public static double Update(IntPtr data)
         {
-            Measure measure = (Measure)GCHandle.FromIntPtr(data).Target;
-            return measure.Update(api);
+            Measure measure = Measure.MeasureFromData(api, data);
+
+            return 0.0;
         }
+
+        [DllExport]
+        public static IntPtr GetString(IntPtr data)
+        {
+            Measure measure = Measure.MeasureFromData(api, data);
+
+            return Marshal.StringToHGlobalUni(""); //returning IntPtr.Zero will result in it not being used
+        }
+
+        //[DllExport]
+        //public static void ExecuteBang(IntPtr data, [MarshalAs(UnmanagedType.LPWStr)]String args)
+        //{
+        //    Measure measure = (Measure)data;
+        //}
+
+        //[DllExport]
+        //public static IntPtr (IntPtr data, int argc,
+        //    [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPWStr, SizeParamIndex = 1)] string[] argv)
+        //{
+        //    Measure measure = (Measure)data;
+        //
+        //    return Marshal.StringToHGlobalUni(""); //returning IntPtr.Zero will result in it not being used
+        //}
     }
 }
